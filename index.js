@@ -1,6 +1,7 @@
-import { getCatalog } from './rottentomatoes.js';
+import {getCatalog} from './rottentomatoes.js';
 import stremioSdk from 'stremio-addon-sdk';
-const { addonBuilder, serveHTTP, publishToCentral } = stremioSdk;
+
+const {addonBuilder, serveHTTP, publishToCentral} = stremioSdk;
 
 let certified_fresh_movie_catalog = [];
 let certified_fresh_series_catalog = [];
@@ -244,14 +245,14 @@ const builder = new addonBuilder({
 })
 
 async function main() {
-    const { url, server } = await serveHTTP(builder.getInterface(), { port: process.env.PORT || 8080 });
+    const {url, server} = await serveHTTP(builder.getInterface(), {port: process.env.PORT || 8080});
 
     setInterval(initCatalogs, 1000 * 60 * 60 * 24);
     await initCatalogs();
 
-    // if (process.env.ADDON_DOMAIN) {
-    //     publishToCentral(`https://${process.env.ADDON_DOMAIN}/manifest.json`);
-    // }
+    if (process.env.ADDON_DOMAIN) {
+        publishToCentral(`https://${process.env.ADDON_DOMAIN}/manifest.json`);
+    }
 }
 
 async function initCatalogs() {
@@ -329,7 +330,7 @@ builder.defineCatalogHandler(async function (args) {
         catalog = replaceRpdbPosters(catalog, args.config.rpdb_key);
     }
 
-    return { metas: catalog };
+    return {metas: catalog};
 })
 
 main();
