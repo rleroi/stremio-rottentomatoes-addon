@@ -6,8 +6,10 @@ const rtIds = {};
 
 export async function getCatalog(type = 'movie', genre = null) {
     let list = 'movies_at_home/critics:certified_fresh';
+    // audience:verified_hot
     if (type === 'series') {
         list = 'tv_series_browse/critics:fresh~sort:popular'
+        // audience:upright
     }
 
     let genreString = '';
@@ -19,7 +21,7 @@ export async function getCatalog(type = 'movie', genre = null) {
     let after = '';
     let hasMore = true;
     for (let page = 1; page < (process.env.RT_PAGES || 1) && hasMore; page++) {
-        let url = `https://www.rottentomatoes.com/napi/browse/${list}${genreString}?after=${after}`;
+        let url = `https://www.rottentomatoes.com/cnapi/browse/${list}${genreString}?after=${after}`;
         let res = await axios.get(url);
         for (const item of res.data?.grid?.list || []) {
             if (!rtIds?.[item?.emsId]) {

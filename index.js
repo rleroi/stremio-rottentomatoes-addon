@@ -49,10 +49,10 @@ let certified_fresh_series_genres = {
 
 const builder = new addonBuilder({
     id: 'pw.ers.rottentomatoes',
-    version: '1.0.5',
+    version: '1.0.6',
     name: 'Rotten Tomatoes',
-    description: 'Certified Fresh Movies to Stream at Home and Best TV Shows (2024).',
-    logo: 'https://i.ibb.co/hyPLjwC/tomato.png',
+    description: 'Certified Fresh Movies to Stream at Home and Best TV Shows.',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/4/45/Rotten_Tomatoes_alternative_logo.svg',
     background: 'https://www.rottentomatoes.com/assets/pizza-pie/head-assets/images/RT_TwitterCard_2018.jpg',
     config: [
         {
