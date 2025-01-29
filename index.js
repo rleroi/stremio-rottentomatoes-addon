@@ -4,6 +4,8 @@ const { addonBuilder, serveHTTP, publishToCentral } = stremioSdk;
 
 let certified_fresh_movie_catalog = [];
 let certified_fresh_series_catalog = [];
+let verified_hot_movie_catalog = [];
+let verified_hot_series_catalog = [];
 let certified_fresh_movie_genres = {
     action: [],
     adventure: [],
@@ -26,6 +28,48 @@ let certified_fresh_movie_genres = {
     western: [],
 }
 let certified_fresh_series_genres = {
+    action: [],
+    adventure: [],
+    animation: [],
+    anime: [],
+    biography: [],
+    comedy: [],
+    crime: [],
+    documentary: [],
+    drama: [],
+    fantasy: [],
+    lgbtq: [],
+    history: [],
+    horror: [],
+    kids_and_family: [],
+    mystery_and_thriller: [],
+    romance: [],
+    sci_fi: [],
+    war: [],
+    western: [],
+}
+let verified_hot_movie_genres = {
+    action: [],
+    adventure: [],
+    animation: [],
+    anime: [],
+    biography: [],
+    comedy: [],
+    crime: [],
+    documentary: [],
+    drama: [],
+    fantasy: [],
+    lgbtq: [],
+    history: [],
+    horror: [],
+    kids_and_family: [],
+    mystery_and_thriller: [],
+    romance: [],
+    sci_fi: [],
+    war: [],
+    western: [],
+}
+let verified_hot_series_genres = {
     action: [],
     adventure: [],
     animation: [],
@@ -98,9 +142,73 @@ const builder = new addonBuilder({
             ]
         },
         {
-            name: 'RT: Best TV Shows',
+            name: 'RT: Verified Hot',
+            type: 'movie',
+            id: 'rthot_movie',
+            extra: [
+                {
+                    name: 'genre',
+                    isRequired: false,
+                    options: [
+                        'Action',
+                        'Adventure',
+                        'Animation',
+                        'Anime',
+                        'Biography',
+                        'Comedy',
+                        'Crime',
+                        'Documentary',
+                        'Drama',
+                        'Fantasy',
+                        'LGBTQ+',
+                        'History',
+                        'Horror',
+                        'Kids & Family',
+                        'Mystery & Thriller',
+                        'Romance',
+                        'Sci-Fi',
+                        'War',
+                        'Western',
+                    ]
+                }
+            ]
+        },
+        {
+            name: 'RT: Fresh TV Shows',
             type: 'series',
             id: 'rtfresh_series',
+            extra: [
+                {
+                    name: 'genre',
+                    isRequired: false,
+                    options: [
+                        'Action',
+                        'Adventure',
+                        'Animation',
+                        'Anime',
+                        'Biography',
+                        'Comedy',
+                        'Crime',
+                        'Documentary',
+                        'Drama',
+                        'Fantasy',
+                        'LGBTQ+',
+                        'History',
+                        'Horror',
+                        'Kids & Family',
+                        'Mystery & Thriller',
+                        'Romance',
+                        'Sci-Fi',
+                        'War',
+                        'Western',
+                    ]
+                }
+            ]
+        },
+        {
+            name: 'RT: Hot TV Shows',
+            type: 'series',
+            id: 'rthot_series',
             extra: [
                 {
                     name: 'genre',
@@ -152,6 +260,10 @@ async function initCatalogs() {
     console.log('Movie catalog done');
     certified_fresh_series_catalog = await getCatalog('series');
     console.log('Series catalog done');
+    verified_hot_movie_catalog = await getCatalog('movie:audience');
+    console.log('Movie:audience catalog done');
+    verified_hot_series_catalog = await getCatalog('series:audience');
+    console.log('Series:audience catalog done');
     for (const genre of Object.keys(certified_fresh_movie_genres)) {
         certified_fresh_movie_genres[genre] = await getCatalog('movie', genre);
         console.log('Movies genre ' + genre + ' catalog done');
@@ -159,6 +271,14 @@ async function initCatalogs() {
     for (const genre of Object.keys(certified_fresh_series_genres)) {
         certified_fresh_series_genres[genre] = await getCatalog('series', genre);
         console.log('Series genre ' + genre + ' catalog done');
+    }
+    for (const genre of Object.keys(verified_hot_movie_genres)) {
+        verified_hot_movie_genres[genre] = await getCatalog('movie:audience', genre);
+        console.log('Movies:audience genre ' + genre + ' catalog done');
+    }
+    for (const genre of Object.keys(verified_hot_series_genres)) {
+        verified_hot_series_genres[genre] = await getCatalog('series:audience', genre);
+        console.log('Series:audience genre ' + genre + ' catalog done');
     }
     console.log('Done building catalog');
 }
@@ -180,20 +300,29 @@ builder.defineCatalogHandler(async function (args) {
 
     let catalog = [];
 
-    if (args.type === 'movie' && !genre) {
+    if (args.id === 'rtfresh_movie' && !genre) {
         catalog = certified_fresh_movie_catalog || [];
     }
-
-    if (args.type === 'movie' && genre) {
+    if (args.id === 'rtfresh_movie' && genre) {
         catalog = certified_fresh_movie_genres[genre] || []
     }
-
-    if (args.type === 'series' && !genre) {
+    if (args.id === 'rtfresh_series' && !genre) {
         catalog = certified_fresh_series_catalog || [];
     }
-
-    if (args.type === 'series' && genre) {
+    if (args.type === 'rtfresh_series' && genre) {
         catalog = certified_fresh_series_genres[genre] || []
+    }
+    if (args.id === 'rthot_movie' && !genre) {
+        catalog = verified_hot_movie_catalog || [];
+    }
+    if (args.id === 'rthot_movie' && genre) {
+        catalog = verified_hot_movie_genres[genre] || []
+    }
+    if (args.id === 'rthot_series' && !genre) {
+        catalog = verified_hot_series_catalog || [];
+    }
+    if (args.type === 'rthot_series' && genre) {
+        catalog = verified_hot_series_genres[genre] || []
     }
 
     if (args?.config?.rpdb_key) {

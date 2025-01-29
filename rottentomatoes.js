@@ -5,11 +5,18 @@ import 'dotenv/config'
 const rtIds = {};
 
 export async function getCatalog(type = 'movie', genre = null) {
-    let list = 'movies_at_home/critics:certified_fresh';
-    // audience:verified_hot
+    let list = '';
+    if (type === 'movie') {
+        list = 'movies_at_home/critics:certified_fresh'
+    }
+    if (type === 'movie:audience') {
+        list = 'tv_series_browse/audience:verified_hot~sort:popular'
+    }
     if (type === 'series') {
         list = 'tv_series_browse/critics:fresh~sort:popular'
-        // audience:upright
+    }
+    if (type === 'series:audience') {
+        list = 'tv_series_browse/audience:upright~sort:popular'
     }
 
     let genreString = '';
