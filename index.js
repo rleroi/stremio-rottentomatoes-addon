@@ -94,7 +94,7 @@ let verified_hot_series_genres = {
 
 const builder = new addonBuilder({
     id: 'pw.ers.rottentomatoes',
-    version: '1.0.6',
+    version: '1.0.8',
     name: 'Rotten Tomatoes',
     description: 'Certified Fresh Movies to Stream at Home and Best TV Shows.',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/4/45/Rotten_Tomatoes_alternative_logo.svg',
