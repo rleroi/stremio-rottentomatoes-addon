@@ -29,7 +29,15 @@ export async function getCatalog(type = 'movie', genre = null) {
     let hasMore = true;
     for (let page = 1; page < (process.env.RT_PAGES || 1) && hasMore; page++) {
         let url = `https://www.rottentomatoes.com/cnapi/browse/${list}${genreString}?after=${after}`;
-        let res = await axios.get(url);
+        let res;
+        try {
+            res = await axios.get(url);
+        } catch(e) {
+            console.error('url', url)
+            console.error(e.message);
+
+            return metas;
+        }
         for (const item of res.data?.grid?.list || []) {
             if (!rtIds?.[item?.emsId]) {
                 const year = await getYear(item);
@@ -50,11 +58,15 @@ export async function getCatalog(type = 'movie', genre = null) {
 async function getTmdbMeta(item, type, year) {
     const tmdbType = type === 'movie' ? 'movie' : 'tv';
     const title = item?.title?.trim();
-    const tmdb = await axios.get(`https://api.themoviedb.org/3/search/${tmdbType}?query=${title}&include_adult=false&year=${year}&language=en-US&page=1`, {
+    const urlTitle = encodeURIComponent(title);
+    const tmdb = await axios.get(`https://api.themoviedb.org/3/search/${tmdbType}?query=${urlTitle}&include_adult=false&year=${year}&language=en-US&page=1`, {
         headers: {
             accept: 'application/json',
             Authorization: 'Bearer ' + process.env.TMDB_TOKEN,
         }
+    }).catch((e) => {
+        console.error('url', `https://api.themoviedb.org/3/search/${tmdbType}?query=${urlTitle}&include_adult=false&year=${year}&language=en-US&page=1`)
+        console.error(e.message);
     });
 
     // Get first item
@@ -69,6 +81,9 @@ async function getTmdbMeta(item, type, year) {
             accept: 'application/json',
             Authorization: 'Bearer ' + process.env.TMDB_TOKEN,
         }
+    }).catch((e) => {
+        console.error('url', `https://api.themoviedb.org/3/${tmdbType}/${tmdbItem?.id}/external_ids`)
+        console.error(e.message);
     });
 
     if (!externalIds?.data?.imdb_id) {
