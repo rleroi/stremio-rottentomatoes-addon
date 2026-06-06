@@ -120,7 +120,11 @@ async function getYear(item) {
 
     if (!year) {
         // json data year
-        (new Date(JSON.parse($('script[type="application/ld+json"]').text())?.dateCreated))?.getFullYear()
+        try {
+            year = (new Date(JSON.parse($('script[type="application/ld+json"]').text())?.dateCreated))?.getFullYear();
+        } catch(e) {
+            console.error(e.message);
+        }
     }
 
     if (!year) {
