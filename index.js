@@ -94,7 +94,7 @@ let verified_hot_series_genres = {
 
 const builder = new addonBuilder({
     id: 'pw.ers.rottentomatoes',
-    version: '1.0.8',
+    version: '1.0.9',
     name: 'Rotten Tomatoes',
     description: 'Certified Fresh Movies to Stream at Home and Best TV Shows.',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/4/45/Rotten_Tomatoes_alternative_logo.svg',
@@ -142,7 +142,7 @@ const builder = new addonBuilder({
                 }
             ]
         },
-        {
+        /*{
             name: 'RT: Verified Hot',
             type: 'movie',
             id: 'rthot_movie',
@@ -173,7 +173,7 @@ const builder = new addonBuilder({
                     ]
                 }
             ]
-        },
+        },*/
         {
             name: 'RT: Fresh TV Shows',
             type: 'series',
@@ -206,7 +206,7 @@ const builder = new addonBuilder({
                 }
             ]
         },
-        {
+        /*{
             name: 'RT: Hot TV Shows',
             type: 'series',
             id: 'rthot_series',
@@ -237,7 +237,7 @@ const builder = new addonBuilder({
                     ]
                 }
             ]
-        },
+        },*/
     ],
     resources: ['catalog'],
     types: ['movie', 'series'],
@@ -261,10 +261,10 @@ async function initCatalogs() {
     console.log('Movie catalog done');
     certified_fresh_series_catalog = await getCatalog('series');
     console.log('Series catalog done');
-    verified_hot_movie_catalog = await getCatalog('movie:audience');
+    /*verified_hot_movie_catalog = await getCatalog('movie:audience');
     console.log('Movie:audience catalog done');
     verified_hot_series_catalog = await getCatalog('series:audience');
-    console.log('Series:audience catalog done');
+    console.log('Series:audience catalog done');*/
     for (const genre of Object.keys(certified_fresh_movie_genres)) {
         certified_fresh_movie_genres[genre] = await getCatalog('movie', genre);
         console.log('Movies genre ' + genre + ' catalog done');
@@ -273,14 +273,14 @@ async function initCatalogs() {
         certified_fresh_series_genres[genre] = await getCatalog('series', genre);
         console.log('Series genre ' + genre + ' catalog done');
     }
-    for (const genre of Object.keys(verified_hot_movie_genres)) {
+    /*for (const genre of Object.keys(verified_hot_movie_genres)) {
         verified_hot_movie_genres[genre] = await getCatalog('movie:audience', genre);
         console.log('Movies:audience genre ' + genre + ' catalog done');
     }
     for (const genre of Object.keys(verified_hot_series_genres)) {
         verified_hot_series_genres[genre] = await getCatalog('series:audience', genre);
         console.log('Series:audience genre ' + genre + ' catalog done');
-    }
+    }*/
     console.log('Done building catalog');
 }
 
